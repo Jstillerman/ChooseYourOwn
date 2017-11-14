@@ -316,7 +316,7 @@ function type(str) {
         panel.innerHTML += str[i] == '\n' ? "<br>" : str[i];
         i++;
       }
-    }, 10);
+    }, 50);
   });
 }
 
