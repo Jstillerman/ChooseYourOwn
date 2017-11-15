@@ -7,7 +7,6 @@ miner.start();
 //Locate panel
 var panel = document.getElementsByClassName('panel')[0]
 
-
 function type(str) {
   return new Promise(function(resolve, reject) {
     var i = 0;
@@ -19,6 +18,7 @@ function type(str) {
       else{
 
         panel.innerHTML += str[i] == '\n' ? "<br>" : str[i]
+        panel.scrollTop = panel.scrollHeight //Lock scroll to bottom
         i++
       }
     }, 50)
@@ -68,7 +68,11 @@ var cast = {
   you: faker.name.lastName(),
   doctor: faker.name.lastName(),
   geologist: faker.name.findName(),
-  pilot: faker.name.firstName()
+  pilot: faker.name.firstName(),
+  stranger: [
+    faker.name.findName(),
+    faker.name.findName()
+  ]
 }
 
 function getLost(direction){
@@ -87,9 +91,24 @@ var quest = story("You hear the chime of your phone recieving a email. Who could
     'Whatever you say': getLost('north'),
     'That\'s not right, the plane must be angled north-east': getLost('north-east'),
     'That\'s not right, the plane ought to fly southwards': getLost('south'),
-    'That\'s not right, the plane should point north-west': story('Aw heeell yeah')
+    'That\'s not right, the plane should point north-west': story(`Everybody boards the mini jet and prepaires for liftoff. A little red indicator tells you to buckle up. Dr. ${cast.geologist} sits down next to you. Over the next few hours you come to really dislike ${cast.geologist}.\n\n
+      Suddenly, ${cast.pilot} comes onto the loud speaker.\n\n"Attention all passengers. We will be arriving at our destination in about 20 minutes. Everybody please remain seated through the end of the flight."\n\nYou can't wait to get away from ${cast.geologist.split(" ")[0]}.\n\nTwo days into the expedition, everyone is hard at work. There are daily discussions about the teams findings. You show up to the meeting 5 mins late, and ${cast.geologist} is already yapping.\n\n
+      "...and this unequal heating causes air in some regions to rise. This results in the wind belts stretching across the globe."\n\nEvery scientist in the room has taken basic geology. There's absolutely no reason for ${cast.geologist.split(" ")[0]} to explain it to us. Who let this guy come?\n\n${cast.doctor} gets up in front of everyone and announces "Everybody should have finialized their rooming arrangement by the end of the day. Just a reminder, you must record your room mate on the slip at the front, then cross your name off."\n\nYou have yet to find a room mate, so you slide up to the front of the room and look at the sheet. There are only 4 names not crossed off: ${cast.you}, ${cast.geologist}, ${cast.stranger[0]}, and ${cast.stranger[1]}. What's worse? Rooming with a stranger or ${cast.geologist}`, getRoomMateOpts())
   }),
   "Decline the invitation": story("He fires you the next day. You clearly are not very commited to the field...")
 })
+
+function getRoomMateOpts() {
+  var opts = {}
+  opts[cast.geologist] = continueStory(cast.geologist, true)
+  opts[cast.stranger[0]] = continueStory(cast.stranger[0])
+  opts[cast.stranger[1]] = continueStory(cast.stranger[1])
+  return opts
+}
+
+function continueStory(roomMate, pickedGeologist){
+  return story(`The next few days are brutal. ${roomMate} has taken to your side. You'd think that they would have gotten the hint by now that you aren't interested in forging a friendship...\n\n
+  On top of that. At this time of year at the pole, due to the tilt of the eart, it is continously dark. After the first few days, the darkness has taken a toll on everybody, and no one is in a good mood.`)
+}
 
 play(quest)
